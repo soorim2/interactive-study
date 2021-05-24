@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .world{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80vw;
+      height: 80vh;
+      background: #fff000;
+      perspective: 500px;
+      /* perspective = 얼마나 내 눈에서 멀리 떨어진 시점 기준으로 보여지게 할 것인가 */
+    }
+    .card{
+      position: relative;
+      width: 100px;
+      height: 150px;
+      margin: 1em;
+      transform: rotateY(0deg);
+     /* 
+      초기값 0은 넣어주는 게 좋다.(성능을 고려하였을 때 )
+      브라우저가 랜딩되었을 때 준비를 해놓는 상태.
+      눈에 띄진 않지만!
+      변화가 있을 시 변화가 없는 default값은 넣어주는 것이 좋다.
+     */
+     /* transform: perspective(500px) rotateY(45deg); */
+     transition: 1s;
+     transform-style: preserve-3d;
+    }
+    .card-side{
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* bottom: 0;
+      right: 0; */
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5em; 
+      font-size: 1.5rem;
+      /* 
+      em = 현재 엘리먼트의 폰트사이즈 기준
+      rem = html의 폰트사이즈 기준
+      = font-size에 비례한 radius.
+      */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .card-side-front{
+      z-index: 1; 
+      background: white;
+      color:#222;
+    }
+    .card-side-back{
+      background: red;
+      transform: rotateY(180deg);
+    }
+    .world:hover .card{
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body>
+ <div class="world">
+   <div class="card">
+      <div class="card-side card-side-front">F</div>
+      <div class="card-side card-side-back">B</div>
+   </div>
+ </div>
+</body>
+</html>

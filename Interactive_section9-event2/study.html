@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Transition/Animation Event</title>
+  <style>
+    @keyframes ball-ani{
+      0%{
+        transform: translate(0, 0);
+      }
+      100%{
+        transform: translate(200px, 200px);
+      }
+
+    }
+    .ball {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: red;
+      transition: 1.5s;
+      /* animation: ball-ani 1s 3 alternate forwards; */
+      /* margin: -15px 0 0 -15px; */
+    }
+    .ball.end {
+      background: dodgerblue;
+      border: 5px solid #ffa000;
+    }
+  </style>
+</head>
+<body>
+  <div class="ball"></div>
+
+  <script>
+  const ballElem = document.querySelector('.ball');
+
+  // window.addEventListener('click', function (e) {
+  //   console.log(e.clientX,e.clientY); //클릭한 위치
+  //   ballElem.style.transform = 'translate('+(e.clientX - 15)+'px,'+(e.clientY - 15)+'px)';
+  // });
+
+  // transitionend = transition이 끝날 때 발생하는 이벤트
+  // transitionstart = transition이 시작할 때 발생하는 이벤트
+  // ballElem.addEventListener('transitionend',function(e){
+  // ballElem.addEventListener('transitionstart',function(e){
+  //   ballElem.classList.add('end');
+  //   console.log(e.elapsedTime); //transition이 진행되는데 시간이 얼마나 소요되는지  = transition-duration
+  //   console.log(e.propertyName); // 바뀐 속성.
+  // });
+
+  // ballElem.addEventListener('animationend',function(){
+    ballElem.addEventListener('click',function(){
+      ballElem.style.animation ='ball-ani 1s 3 alternate forwards'
+    });
+    ballElem.addEventListener('animationend',function(){
+      ballElem.classList.add('end');
+    });
+    
+    //animationiteration 애니메이션이 반복 실행되는 시점
+    ballElem.addEventListener('animationiteration',function(){
+      console.log('반복!');
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object</title>
+    <style>
+        .card{
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 150px;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        .card~ .card{
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Object</h1>
+    <script>
+       function Card(num, color){
+           this.num = num;
+           this.color = color;
+           this.init();
+       }
+       Card.prototype =  {
+           //새로운 객체를 다시 만들기 때문에 생성자(constructer)속성을 선언해줌.
+           constructer: Card,
+           //init 
+           init: function(){
+                const mainElem = document.createElement('div');
+                mainElem.style.color = this.color;
+                mainElem.innerHTML = this.num;
+                mainElem.classList.add('card');
+                document.body.appendChild(mainElem);
+           },
+       };
+       const card1 =new Card(1, 'green');
+       const card2 =new Card(7, 'red');
+       const card3 =new Card(3, 'blue');
+       const card4 =new Card(11, '#a7f32e');
+    </script>
+</body>
+</html>

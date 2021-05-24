@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>setTimeout</title>
+	<style>
+		.btn {
+			font-size: 2rem;
+		}
+	</style>
+</head>
+<body>
+	<button class="btn">취소</button>
+	<script>
+        let timeId;
+		let n = 0;
+		const btn = document.querySelector('.btn');
+
+        // function sample(){ 
+        //     console.log('sample!')
+        // };
+
+		// timeId = setTimeout(sample, 3000);
+		//setTimeout 지연시킬 의도 (3초 후에 sample 실행)
+		// timeId = setInterval(sample, 1000/2);
+		//setInterval 반복시킬 의도
+		
+        // console.log(timeId);
+
+		// btn.addEventListener('click',function(){
+		// 	clearTimeout(timeId);
+		// });
+		//clearTimeout = setTimeout을 초기화
+
+		// btn.addEventListener('click',function(){
+		// 	clearInterval(timeId);
+		// });
+		//clearInterval = setInterval을 초기화함
+
+		//setInterval은 아무리 빠르게 반복을 시키고 싶어도
+		//컴퓨터의 처리능력에 따라 부하가 걸려 프레임로스, 배터리 소모량 증가등의 단점이 있음
+
+
+		// requestAnimationFrame = 위 setInterval의 단점을 개선 / ie10부터 지원.
+	
+		function sample(){ 
+			n++;
+            // console.log('sample!')
+			// if(n>200){
+			// 	return;
+			// }
+			if (n % 60 === 0) { //반복시간 컨트롤
+				//count를 60으로 나누었을 때 나머지가 0일 때만 실행되도록 하는 것 (% 60 === 0 = 1초에 1번)
+				console.log('action!');
+			}
+			timeId= requestAnimationFrame(sample); //한번 더 호출
+			// 반복시킬 함수 안에 사용
+        };
+		sample();
+		// requestAnimationFrame(sample);
+
+		btn.addEventListener('click',function(){
+			cancelAnimationFrame(timeId);
+		});
+
+		//cancelAnimationFrame = requestAnimationFrame 중지
+
+	</script>
+</body>
+</html>
