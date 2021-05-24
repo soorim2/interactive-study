@@ -2,6 +2,7 @@
 	const stageElem = document.querySelector('.stage');
 	const houseElem = document.querySelector('.house');
 	const barElem = document.querySelector('.progress-bar');
+	const selectCharacterElem = document.querySelector('.select-character');
 	const mousePos = { x: 0, y: 0 };
 	let maxScrollValue = 0;
 	function resizeHandler() {
@@ -33,9 +34,13 @@
 		// console.log((e.clientX / window.innerWidth) * 100);
 		new Character({
 			xPos: (e.clientX / window.innerWidth) * 100,
+			speed: Math.random() * 0.5 + 0.2,
 		});
 	});
-
+	selectCharacterElem.addEventListener('click', function (e) {
+		const value = e.target.getAttribute('data-char'); //이벤트 위임
+		document.body.setAttribute('data-char', value);
+	});
 	resizeHandler();
 
 	// new Character(); // studyCharacter에  있는 Character 함수 실행

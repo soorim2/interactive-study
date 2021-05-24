@@ -31,11 +31,14 @@ function Character(info) {
 	document.querySelector('.stage').appendChild(this.mainElem);
 
 	this.mainElem.style.left = info.xPos + '%';
-	console.log(info); // 상단 Character 생성자 옆에 info객체를 적으면
+	// console.log(info); // 상단 Character 생성자 옆에 info객체를 적으면 각각의 객체.
 	this.scrollState = false; // 스크롤 중인지 아닌지 체크
-	this.xPos = info.xPos;
 	this.lastScrollTop = 0; // 바로 이전 스크롤 위치
-	this.speed = 2;
+	this.xPos = info.xPos; //각각 객체에 xPos값을 넣어줌 (각각 객체에  xPos라는 속성이 생김)
+	this.speed = info.speed;
+	this.direction; //requestAnimationFrame 을 위한 방향 설정
+	this.runningState = false; // 좌우 이동 중인지 아닌지
+	this.rafId;
 	this.init(); //프로토타입 내부 메서드 실행
 }
 
@@ -50,7 +53,7 @@ Character.prototype = {
 				//그 후엔 settimeout으로 ture가 되니 실행이 안됨
 				//값이
 				self.mainElem.classList.add('running');
-				console.log('running 붙음');
+				// console.log('running 붙음');
 			}
 			self.scrollState = setTimeout(() => {
 				self.scrollState = false;
@@ -64,34 +67,104 @@ Character.prototype = {
 			if (self.lastScrollTop > pageYOffset) {
 				//이전 스크롤 위치가 크다면 : 스크롤을 올렸을 때
 				self.mainElem.setAttribute('data-direction', 'backward');
-				console.log('스크롤 올림');
-				console.log(self.mainElem.attributes);
+				// console.log('스크롤 올림');
+				// console.log(self.mainElem.attributes);
 			} else {
 				//현재 스크롤 위치가 크다면 : 스크롤을 내렸을 때
 				self.mainElem.setAttribute('data-direction', 'forward');
-				console.log('스크롤 내림');
+				// console.log('스크롤 내림');
 			}
 			self.lastScrollTop = pageYOffset; // 스크롤이 끝나는 시점에 해당 스크롤 위치를 self.lastScrollTop에 저장
 		});
 		window.addEventListener('keydown', function (e) {
-			console.log(e.keyCode);
+			if (self.runningState) return;
+			// console.log(e.keyCode);
 			if (e.keyCode == 37) {
+				self.direction = 'left';
 				self.mainElem.setAttribute('data-direction', 'left');
 				self.mainElem.classList.add('running');
-				self.xPos -= self.speed;
-				// self.xPos = self.xPos - self.speed;
-				self.mainElem.style.left = self.xPos + '%';
+				//초당 10프레임정도 밖에 안되는 속도로 버벅임 현상이 있으니 requestAnimationFrame을 사용(하단에 함수 추가)
+				// self.xPos -= self.speed;
+				// // self.xPos = self.xPos - self.speed;
+				// self.mainElem.style.left = self.xPos + '%';
+				// self.run();
+				////// 해결 1.  함수의 매개변수로 전달해서 this를 살리는 방법
+				self.run(self);
+				////// 해결 2.  bind 메서드로  this를 직접 지정하기
+				// self.run();
+				self.runningState = true;
 			} else if (e.keyCode == 39) {
+				self.direction = 'right';
 				self.mainElem.setAttribute('data-direction', 'right');
 				self.mainElem.classList.add('running');
-				self.xPos += self.speed;
-				self.mainElem.style.left = self.xPos + '%';
+				//초당 10프레임정도 밖에 안되는 속도로 버벅임 현상이 있으니 requestAnimationFrame을 사용(하단에 함수 추가)
+				// self.xPos += self.speed;
+				// // self.xPos = self.xPos + self.speed;
+				// self.mainElem.style.left = self.xPos + '%';
+				// self.run();
+				////// 해결 1.  함수의 매개변수로 전달해서 this를 살리는 방법
+				self.run(self);
+				////// 해결 2.  bind 메서드로  this를 직접 지정하기
+				// self.run();
+				self.runningState = true;
 			}
 		});
 		window.addEventListener('keyup', function (e) {
 			self.mainElem.classList.remove('running');
+			this.cancelAnimationFrame(self.rafId);
+			self.runningState = false;
 		});
 	},
+	// run: function () {
+	// 	const self = this;
+	// 	if (self.direction == 'left') {
+	// 		self.xPos -= self.speed;
+	// 	} else if (self.direction == 'right') {
+	// 		self.xPos += self.speed;
+	// 	}
+	// 	self.mainElem.style.left = self.xPos + '%'; //바뀐 값을 실제 css로 적용
+	// 	console.log(self); // self는 Character 를 잘 가리키다가 window객체를 가리키는 이유 = requestAnimationFrame가 실행 될 때 컨텍스트가 바뀌면서 윈도우 전역객체를 가리키기 때문
+	// 	requestAnimationFrame(self.run); // 키를 눌렀을 때(상단 key down 이벤트 안에서 실행 해줘야 함)
+	// },
+
+	//// 해결 1.  함수의 매개변수로 전달해서 this를 살리는 방법
+	run: function (self) {
+		if (self.direction == 'left') {
+			self.xPos -= self.speed;
+		} else if (self.direction == 'right') {
+			self.xPos += self.speed;
+		}
+		if (self.xPos < 2) {
+			self.xPos = 2;
+		}
+		if (self.xPos > 88) {
+			self.xPos = 88;
+		}
+		self.mainElem.style.left = self.xPos + '%';
+		self.rafId = requestAnimationFrame(function () {
+			self.run(self);
+		});
+		// console.log(self.speed);
+	},
+
+	////// 해결 2.  bind 메서드로  this를 직접 지정하기
+	// run: function () {
+	// 	////// 해결 2.  bind 메서드로  this를 직접 지정하기
+	// 	const self = this;
+	// 	if (self.direction == 'left') {
+	// 		self.xPos -= self.speed;
+	// 	} else if (self.direction == 'right') {
+	// 		self.xPos += self.speed;
+	// 	}
+	// 	if (self.xPos < 2) {
+	// 		self.xPos = 2;
+	// 	}
+	// 	if (self.xPos > 88) {
+	// 		self.xPos = 88;
+	// 	}
+	// 	self.mainElem.style.left = self.xPos + '%';
+	// 	requestAnimationFrame(self.run.bind(self));
+	// },
 };
 // 현재 스크롤 상태를 나타내는 scrollState의 기본값은 false이다.
 // 스크롤 이벤트가 실행되면 clearTimeout이 먼저 작동한다.
