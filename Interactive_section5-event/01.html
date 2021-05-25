@@ -68,11 +68,13 @@
            function clickHandler(e){
                 // console.log(this);
                 // console.log(e.currentTarget);
-                console.log(e.target);
+                // console.log(e.target);
+                //// case 1
                 // e.target.classList.toggle('special')
                 // if(e.target.classList.contains('characters')){
                 //     this.classList.remove('special');
                 // }
+                //// case 2 (권장)
                 if(e.target.tagName != 'IMG') return;
                 e.target.classList.toggle('special')
            }
