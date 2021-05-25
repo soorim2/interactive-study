@@ -30,7 +30,8 @@
     </style>
     <!-- <script>
         // window.addEventListener('load',function(){ //문서에 있는 이미지를 포함한 모든 리소스가 로드 된 후에 실행
-        window.addEventListener('DOMContentLoaded',function(){ // DOM구조만 로드되면 바로 실행
+        window.addEventListener('DOMContentLoaded',function(){ // DOM구조만 로드되면 바로 실행 jquery의 $(function(){}); 과 동일
+        //'load'보다 'DOMContentLoaded'를 사용하자
             const ilbuni = document.querySelector('.ilbuni.c');
             function clickInbuniHandler(){
                 ilbuni.classList.toggle('special');
@@ -38,6 +39,7 @@
             ilbuni.addEventListener('click', clickInbuniHandler);
         });
     </script> -->
+    <!-- 브라우저는 위에서부터 읽어오기 때문에 script 를 body가 끝나는 시점에 추가하면,  window.addEventListener('load'), window.addEventListener('DOMContentLoaded')를 적지 않아도 된다. (권장)-->
 </head>
 <body>
     <div class="characters">
@@ -56,12 +58,23 @@
     </div>
 
     <script>
+        // const eventHandeler = function(){}; 
+        // =
+        // const eventHandeler = () => {};  // ie 미지원
+
        (function(){
            const characters = document.querySelector('.characters');
+        //    const ilbuni = document.querySelector('.ilbuni');
            function clickHandler(e){
                 // console.log(this);
                 // console.log(e.currentTarget);
                 console.log(e.target);
+                // e.target.classList.toggle('special')
+                // if(e.target.classList.contains('characters')){
+                //     this.classList.remove('special');
+                // }
+                if(e.target.tagName != 'IMG') return;
+                e.target.classList.toggle('special')
            }
            characters.addEventListener('click', clickHandler);
        })(); 
